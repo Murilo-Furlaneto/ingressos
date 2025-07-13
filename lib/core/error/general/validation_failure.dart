@@ -1,7 +1,7 @@
 import '../failure.dart';
 
 class ValidationFailure extends Failure {
-  ValidationFailure({required String description}) : super(description: description);
+  ValidationFailure({required super.description});
 
   factory ValidationFailure.emptyField(String fieldName) =>
       ValidationFailure(description: 'O campo "$fieldName" não pode estar vazio.');

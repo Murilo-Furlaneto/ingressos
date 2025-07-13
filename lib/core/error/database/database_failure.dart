@@ -1,8 +1,7 @@
-import 'package:ingressos/core/error/database/cache_failure.dart';
 import 'package:ingressos/core/error/failure.dart';
 
 class DatabaseFailure extends Failure {
-  DatabaseFailure({required String description}) : super(description: description);
+  DatabaseFailure({required super.description});
 
   factory DatabaseFailure.fromException(Exception e) {
     final message = e.toString().toLowerCase();

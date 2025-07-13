@@ -4,7 +4,7 @@ class MovieModel {
   final int id;
   final String title;
   final String posterPath;
-  final String backdropPath;
+  final String? backdropPath; 
   final List<int> genreIds;
   final String overview;
   final String releaseDate;
@@ -18,7 +18,7 @@ class MovieModel {
     required this.id,
     required this.title,
     required this.posterPath,
-    required this.backdropPath,
+    this.backdropPath, // Não obrigatório
     required this.genreIds,
     required this.overview,
     required this.releaseDate,
@@ -31,18 +31,18 @@ class MovieModel {
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
     return MovieModel(
-      id: json['id'],
-      title: json['title'],
-      posterPath: json['poster_path'],
-      backdropPath: json['backdrop_path'],
-      genreIds: List<int>.from(json['genre_ids']),
-      overview: json['overview'],
-      releaseDate: json['release_date'],
-      voteAverage: (json['vote_average'] as num).toDouble(),
-      voteCount: json['vote_count'],
-      adult: json['adult'],
-      originalLanguage: json['original_language'],
-      popularity: (json['popularity'] as num).toDouble(),
+      id: json['id'] ?? 0, // Valor padrão caso falte no JSON
+      title: json['title'] ?? 'Sem título', // Valor padrão
+      posterPath: json['poster_path'] ?? '', // Valor padrão
+      backdropPath: json['backdrop_path'], // Pode ser nulo
+      genreIds: List<int>.from(json['genre_ids'] ?? []), // Garantindo que a lista nunca seja nula
+      overview: json['overview'] ?? '', // Valor padrão
+      releaseDate: json['release_date'] ?? 'Data desconhecida', // Valor padrão
+      voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0, // Valor padrão
+      voteCount: json['vote_count'] ?? 0, // Valor padrão
+      adult: json['adult'] ?? false, // Valor padrão
+      originalLanguage: json['original_language'] ?? 'en', // Valor padrão
+      popularity: (json['popularity'] as num?)?.toDouble() ?? 0.0, // Valor padrão
     );
   }
 
@@ -68,7 +68,7 @@ class MovieModel {
       id: model.id,
       title: model.title,
       posterPath: model.posterPath,
-      backdropPath: model.backdropPath,
+      backdropPath: model.backdropPath ?? '', 
       genreIds: model.genreIds,
       overview: model.overview,
       releaseDate: model.releaseDate,
@@ -85,7 +85,7 @@ class MovieModel {
       id: movie.id,
       title: movie.title,
       posterPath: movie.posterPath,
-      backdropPath: movie.backdropPath,
+      backdropPath: movie.backdropPath, 
       genreIds: movie.genreIds,
       overview: movie.overview,
       releaseDate: movie.releaseDate,

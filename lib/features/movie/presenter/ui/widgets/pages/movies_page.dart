@@ -1,100 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:ingressos/features/injection_container/service_locator.dart';
+import 'package:ingressos/features/movie/data/model/genre_data.dart';
+import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
+import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';
 import 'package:ingressos/features/movie/presenter/ui/widgets/movie_card_widget.dart';
 
-class MoviesPage extends StatelessWidget {
+class MoviesPage extends StatefulWidget {
+  const MoviesPage({super.key});
 
-   MoviesPage({ super.key });
+  @override
+  State<MoviesPage> createState() => _MoviesPageState();
+}
 
-   final List<Map<String, dynamic>> movies = [
-    {
-      'title': 'Guardiões da Galáxia Vol. 3',
-      'rating': 8.2,
-      'genres': 'Ação/Aventura',
-    },
-    {
-      'title': 'Homem-Aranha: Através do Aranhaverso',
-      'rating': 9.0,
-      'genres': 'Animação/Ação',
-    },
-    // Adicione mais filmes conforme necessário
-  ];
+class _MoviesPageState extends State<MoviesPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final movieNotifier = get<MovieNotifier>();
 
-   @override
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    movieNotifier.getNowPlaying();
+    movieNotifier.getUpComing();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget buildMovieGrid(List<Movie> movies) {
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.68,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: movies.length,
+      itemBuilder: (context, index) {
+        final movie = movies[index];
+        return MovieCard(
+          title: movie.title,
+          rating: movie.voteAverage,
+          genres: getGenreNames(movie.genreIds),
+          backdropPath: movie.backdropPath,
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF181829),
+      backgroundColor: const Color.fromRGBO(28, 28, 45, 1),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF2A2A40), 
+        elevation: 0,
+        title: Text("Ingressos", style: TextStyle(color: Colors.white),),
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.white, 
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          tabs: const [Tab(text: 'Em Cartaz'), Tab(text: 'Em Breve')],
+        ),
+      ),
+
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: TabBarView(
+          controller: _tabController,
           children: [
-            // Header
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF3B1E7C), Color(0xFF4E2F8E)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'CinemaApp',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Filmes em cartaz',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Barra de busca
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Buscar filmes...',
-                  prefixIcon: Icon(Icons.search, color: Colors.white54),
-                  filled: true,
-                  fillColor: const Color(0xFF23223A),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintStyle: const TextStyle(color: Colors.white54),
-                ),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            // Lista de filmes
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.68,
-                ),
-                itemCount: movies.length,
-                itemBuilder: (context, index) {
-                  final movie = movies[index];
-                  return MovieCard(
-                    title: movie['title'],
-                    rating: movie['rating'],
-                    genres: movie['genres'],
-                  );
+            ValueListenableBuilder(
+                valueListenable: movieNotifier.nowPlayingMovies,
+                builder: (_, value, child) {
+                    return buildMovieGrid(value);
                 },
-              ),
+            ),
+            ValueListenableBuilder(
+                valueListenable: movieNotifier.comingSoonMovies,
+                builder: (_, value, child) {
+                    return buildMovieGrid(value);
+                },
             ),
           ],
         ),

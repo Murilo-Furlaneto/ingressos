@@ -40,3 +40,10 @@ Este projeto consiste em um aplicativo mobile para **compra online de ingressos 
 - Adicionar autenticação e perfil de usuário.
 - Melhorar o cache local para otimizar desempenho e reduzir chamadas externas.
 - Implementar notificações push para confirmação e lembretes de sessão.
+
+## Vídeo do Projeto
+- O vídeo abaixo mostra a V1 do projeto, ele ainda não esta finalizado, são apenas as primeiras páginas mostrando seu funcionamento básico.
+
+
+https://github.com/user-attachments/assets/3f55696a-2782-4fa1-a978-1f99c7d486b9
+

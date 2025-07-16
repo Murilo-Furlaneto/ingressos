@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:ingressos/features/movie/data/datasource/remote_movie_data_source.dart';
 import 'package:ingressos/features/movie/data/repository/movies_repository_impl.dart';
 import 'package:ingressos/features/movie/domain/repository/movies_repository.dart';
+import 'package:ingressos/features/movie/domain/usecases/get_movie_cast.dart';
+import 'package:ingressos/features/movie/domain/usecases/get_movie_detail.dart';
+import 'package:ingressos/features/movie/domain/usecases/get_movie_reviews.dart';
+import 'package:ingressos/features/movie/domain/usecases/get_movie_videos.dart';
 import 'package:ingressos/features/movie/domain/usecases/get_now_playing_movies.dart';
 import 'package:ingressos/features/movie/domain/usecases/get_up_coming.dart';
 import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';
@@ -10,26 +14,30 @@ import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart'
 final get = GetIt.instance;
 
 void setupLocator() {
-  // External dependencies
   get.registerLazySingleton(() => http.Client());
 
-  // DataSources
   get.registerLazySingleton<RemoteMovieDataSource>(
     () => RemoteMovieDataSource(client: get()),
   );
 
-  // Repository
+  
   get.registerLazySingleton<MoviesRepository>(
     () => MoviesRepositoryImpl(remoteMovieDataSource: get()),
   );
 
-  // UseCases
   get.registerLazySingleton(() => GetNowPlayingMovies(repository: get()));
   get.registerLazySingleton(() => GetUpComingMovies(repository: get()));
+  get.registerLazySingleton(() => GetMovieCast(repository: get()));
+  get.registerLazySingleton((() => GetMovieDetail(repository: get())));
+  get.registerLazySingleton(() => GetMovieReviews(repository: get()));
+  get.registerLazySingleton(() => GetMovieVideos(repository: get()));
 
-  // Notifier
   get.registerFactory(() => MovieNotifier(
         getNowPlayingUseCase: get(),
-        getUpComingUseCase: get(),
+        getUpComingUseCase: get(), 
+        getMovieCastUseCase: get(), 
+        getMovieDetailUseCase: get(), 
+        getMovieReviewsUseCase: get(), 
+        getMovieVideosUseCase: get(),
       ));
 }

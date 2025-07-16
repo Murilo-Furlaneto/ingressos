@@ -4,6 +4,7 @@ import 'package:ingressos/features/movie/data/model/genre_data.dart';
 import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
 import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';
 import 'package:ingressos/features/movie/presenter/ui/widgets/movie_card_widget.dart';
+import 'package:ingressos/features/movie/presenter/ui/widgets/pages/movie_detail_page.dart';
 
 class MoviesPage extends StatefulWidget {
   const MoviesPage({super.key});
@@ -44,11 +45,14 @@ class _MoviesPageState extends State<MoviesPage>
       itemCount: movies.length,
       itemBuilder: (context, index) {
         final movie = movies[index];
-        return MovieCard(
-          title: movie.title,
-          rating: movie.voteAverage,
-          genres: getGenreNames(movie.genreIds),
-          backdropPath: movie.backdropPath,
+        return GestureDetector(
+          onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetailPage(movie: movie, notifier: movieNotifier,))),
+          child: MovieCard(
+            title: movie.title,
+            rating: movie.voteAverage,
+            genres: getGenreNames(movie.genreIds),
+            backdropPath: movie.backdropPath,
+          ),
         );
       },
     );

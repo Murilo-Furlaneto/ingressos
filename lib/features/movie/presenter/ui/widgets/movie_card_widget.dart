@@ -26,7 +26,7 @@ class MovieCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black,
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -39,7 +39,7 @@ class MovieCard extends StatelessWidget {
             height: 140,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.indigo.withOpacity(0.3),
+              color: Colors.indigo,
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(20),
               ),

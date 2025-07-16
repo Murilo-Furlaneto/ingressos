@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:ingressos/features/injection_container/service_locator.dart';
+import 'package:ingressos/injection_container/service_locator.dart';
 import 'package:ingressos/features/movie/presenter/ui/widgets/pages/movies_page.dart';
 import 'package:ingressos/routes/routes.dart';
 

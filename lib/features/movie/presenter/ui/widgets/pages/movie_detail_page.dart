@@ -78,7 +78,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   void _buyTicket() {
     if (selectedDate != null && selectedSession != null) {
-      // lógica para comprar ingresso
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

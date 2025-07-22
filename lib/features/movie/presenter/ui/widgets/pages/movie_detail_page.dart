@@ -6,6 +6,8 @@ import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
 import 'package:ingressos/features/movie/domain/entities/review_entity.dart';
 import 'package:ingressos/features/movie/domain/entities/video_entity.dart';
 import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';
+import 'package:ingressos/features/room/domain/entities/room_entity.dart';
+import 'package:ingressos/features/seat/presenter/ui/pages/seat_selection_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailPage extends StatefulWidget {
@@ -70,18 +72,30 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     });
   }
 
+  Room? selectedRoom;
+
   void _onSessionSelected(String session) {
     setState(() {
       selectedSession = session;
     });
   }
 
+  void _onRoomSelected(Room room) {
+    setState(() {
+      selectedRoom = room;
+    });
+  }
+
   void _buyTicket() {
-    if (selectedDate != null && selectedSession != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Ingresso comprado para $selectedDate às $selectedSession',
+    if (selectedDate != null && selectedSession != null && selectedRoom != null) {
+      Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => SeatSelectionPage(
+            movie: widget.movie,
+            selectedDate: selectedDate!,
+            selectedSession: selectedSession!,
+            selectedRoom: selectedRoom!,
           ),
         ),
       );
@@ -111,7 +125,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           padding: const EdgeInsets.all(12),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFFD700),
+              backgroundColor: Colors.grey,
               foregroundColor: Colors.black,
               minimumSize: const Size.fromHeight(50),
               shape: RoundedRectangleBorder(

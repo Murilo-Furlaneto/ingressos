@@ -1,4 +1,8 @@
-A estrutura de pastas para um projeto Flutter com Clean Architecture pode ser organizada de forma a facilitar a escalabilidade, manutenção e testes. A ideia é dividir a aplicação em camadas bem definidas, separando as responsabilidades e garantindo que o código seja coeso e reutilizável.
+# Documentação do Projeto
+
+## Estrutura do Projeto
+
+O projeto segue a Clean Architecture, organizado em camadas bem definidas para facilitar a manutenção, testabilidade e escalabilidade. Abaixo está a estrutura atualizada do projeto:
 Aqui está uma sugestão de estrutura de pastas baseada na Clean Architecture:
 Estrutura de Pastas
 lib/

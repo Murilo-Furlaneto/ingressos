@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ingressos/features/injection_container/service_locator.dart';
+import 'package:ingressos/injection_container/service_locator.dart';
 import 'package:ingressos/features/movie/data/model/genre_data.dart';
 import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
 import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';

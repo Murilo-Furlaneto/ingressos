@@ -10,6 +10,11 @@ import 'package:ingressos/features/movie/domain/usecases/get_movie_videos.dart';
 import 'package:ingressos/features/movie/domain/usecases/get_now_playing_movies.dart';
 import 'package:ingressos/features/movie/domain/usecases/get_up_coming.dart';
 import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';
+import 'package:ingressos/features/room/data/datasource/room_data_source.dart';
+import 'package:ingressos/features/room/data/repository/room_repository_impl.dart';
+import 'package:ingressos/features/room/domain/repository/room_repository.dart';
+import 'package:ingressos/features/room/domain/usecases/room_usecases.dart';
+import 'package:ingressos/features/room/presenter/provider/room_notifier.dart';
 
 final get = GetIt.instance;
 
@@ -20,10 +25,11 @@ void setupLocator() {
     () => RemoteMovieDataSource(client: get()),
   );
 
-  
   get.registerLazySingleton<MoviesRepository>(
     () => MoviesRepositoryImpl(remoteMovieDataSource: get()),
   );
+
+  get.registerLazySingleton<RoomDataSource>(() => RoomDataSource());
 
   get.registerLazySingleton(() => GetNowPlayingMovies(repository: get()));
   get.registerLazySingleton(() => GetUpComingMovies(repository: get()));
@@ -31,13 +37,21 @@ void setupLocator() {
   get.registerLazySingleton((() => GetMovieDetail(repository: get())));
   get.registerLazySingleton(() => GetMovieReviews(repository: get()));
   get.registerLazySingleton(() => GetMovieVideos(repository: get()));
+  get.registerLazySingleton<RoomDataSource>(() => RoomDataSource());
+  get.registerLazySingleton<RoomRepositoryImpl>(() => RoomRepositoryImpl());
+  get.registerLazySingleton<RoomRepository>(() => RoomRepositoryImpl());
+  get.registerLazySingleton(() => GetAvailableRoomsUseCase(get()));
+  get.registerFactory(() => RoomNotifier(get()));
+  get.registerLazySingleton<RoomDataSource>(() => RoomDataSource());
 
-  get.registerFactory(() => MovieNotifier(
-        getNowPlayingUseCase: get(),
-        getUpComingUseCase: get(), 
-        getMovieCastUseCase: get(), 
-        getMovieDetailUseCase: get(), 
-        getMovieReviewsUseCase: get(), 
-        getMovieVideosUseCase: get(),
-      ));
+  get.registerFactory(
+    () => MovieNotifier(
+      getNowPlayingUseCase: get(),
+      getUpComingUseCase: get(),
+      getMovieCastUseCase: get(),
+      getMovieDetailUseCase: get(),
+      getMovieReviewsUseCase: get(),
+      getMovieVideosUseCase: get(),
+    ),
+  );
 }

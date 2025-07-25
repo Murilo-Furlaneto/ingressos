@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:ingressos/features/seat/domain/entities/room_entity.dart';
-import 'package:ingressos/features/seat/domain/usecases/get_available_rooms_usecase.dart';
+
+import 'package:flutter/material.dart';
+import 'package:ingressos/features/room/domain/entities/room_entity.dart';
+import 'package:ingressos/features/room/domain/usecases/room_usecases.dart';
 
 class RoomNotifier extends ChangeNotifier {
   final GetAvailableRoomsUseCase getAvailableRoomsUseCase;
@@ -12,7 +13,7 @@ class RoomNotifier extends ChangeNotifier {
   }
 
   void _loadRooms() {
-    availableRooms = getAvailableRoomsUseCase();
+    availableRooms = getAvailableRoomsUseCase.getRooms();
     notifyListeners();
   }
 

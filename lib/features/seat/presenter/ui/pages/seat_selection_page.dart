@@ -1,14 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
+import 'package:ingressos/features/payment/presenter/ui/payment_page.dart';
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
+import 'package:ingressos/features/seat/domain/entities/seat_entity.dart';
 import 'package:ingressos/features/seat/domain/enum/seat_status.dart';
 
 class SeatSelectionPage extends StatefulWidget {
   const SeatSelectionPage({
-    super.key, 
-    required this.movie, 
-    required this.selectedDate, 
+    super.key,
+    required this.movie,
+    required this.selectedDate,
     required this.selectedSession,
     required this.selectedRoom,
   });
@@ -22,37 +24,35 @@ class SeatSelectionPage extends StatefulWidget {
   _SeatSelectionPageState createState() => _SeatSelectionPageState();
 }
 
-
 class _SeatSelectionPageState extends State<SeatSelectionPage> {
-  final List<String> rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+  final List<String> rows = [
+    'A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
   final int seatsPerRow = 14;
-  
-  // Matriz de assentos mais realista
+
   late List<List<SeatStatus>> seats;
-  
+  List<Seat> selectedSeat = [];
+
   @override
   void initState() {
     super.initState();
-    
-    // Inicializa todos os assentos como disponíveis
+
     seats = List.generate(
       rows.length,
       (_) => List.generate(seatsPerRow, (_) => SeatStatus.disponivel),
     );
-    
-    // Gera assentos reservados e bloqueados aleatoriamente
+
     final random = Random();
-    final numberOfReservedSeats = random.nextInt(10) + 5; // 5-15 assentos reservados
-    final numberOfBlockedSeats = random.nextInt(5) + 3; // 3-8 assentos bloqueados
-    
-    // Adiciona assentos reservados aleatoriamente
+    final numberOfReservedSeats =
+        random.nextInt(10) + 5; // 5-15 assentos reservados
+    final numberOfBlockedSeats =
+        random.nextInt(5) + 3; // 3-8 assentos bloqueados
+
     for (var i = 0; i < numberOfReservedSeats; i++) {
       final row = random.nextInt(rows.length);
       final col = random.nextInt(seatsPerRow);
       seats[row][col] = SeatStatus.reservado;
     }
-    
-    // Adiciona assentos bloqueados aleatoriamente
+
     for (var i = 0; i < numberOfBlockedSeats; i++) {
       final row = random.nextInt(rows.length);
       final col = random.nextInt(seatsPerRow);
@@ -73,20 +73,28 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     }
   }
 
+  void onSelectedSeat(SeatStatus status, int row, int col) {
+    debugPrint("Assento selecionado: ${rows[row]}${col + 1}");
+    debugPrint("Status do assento: $status");
+    selectedSeat.add(Seat(status: status, posicao: "${rows[row]}${col + 1}"));
+  }
+
   Widget _buildSeat(int row, int col, SeatStatus status) {
     return GestureDetector(
-      onTap: status == SeatStatus.disponivel
-          ? () {
-              setState(() {
-                seats[row][col] = SeatStatus.selecionado;
-              });
-            }
-          : status == SeatStatus.selecionado
+      onTap:
+          status == SeatStatus.disponivel
               ? () {
-                  setState(() {
-                    seats[row][col] = SeatStatus.disponivel;
-                  });
-                }
+                setState(() {
+                  seats[row][col] = SeatStatus.selecionado;
+                  onSelectedSeat(seats[row][col], row, col);
+                });
+              }
+              : status == SeatStatus.selecionado
+              ? () {
+                setState(() {
+                  seats[row][col] = SeatStatus.disponivel;
+                });
+              }
               : null,
       child: Container(
         margin: const EdgeInsets.all(1),
@@ -122,11 +130,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.location_on,
-                  size: 16,
-                  color: Colors.grey,
-                ),
+                const Icon(Icons.location_on, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
                   widget.selectedRoom.name,
@@ -138,13 +142,21 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                    color: widget.selectedRoom.type == "DUB" ? Colors.purple :
-                           widget.selectedRoom.type == "IMAX" ? Colors.blue :
-                           widget.selectedRoom.type == "3D" ? Colors.orange :
-                           widget.selectedRoom.type == "VIP" ? Colors.amber :
-                           Colors.teal,
+                    color:
+                        widget.selectedRoom.type == "DUB"
+                            ? Colors.purple
+                            : widget.selectedRoom.type == "IMAX"
+                            ? Colors.blue
+                            : widget.selectedRoom.type == "3D"
+                            ? Colors.orange
+                            : widget.selectedRoom.type == "VIP"
+                            ? Colors.amber
+                            : Colors.teal,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -157,11 +169,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Icon(
-                  Icons.calendar_today,
-                  size: 16,
-                  color: Colors.grey[400],
-                ),
+                Icon(Icons.calendar_today, size: 16, color: Colors.grey[400]),
                 const SizedBox(width: 4),
                 Text(
                   "${widget.selectedDate.day}/${widget.selectedDate.month}/${widget.selectedDate.year} às ${widget.selectedSession}",
@@ -175,11 +183,11 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
             ),
           ],
         ),
-        toolbarHeight: 100,
+        toolbarHeight: 70,
       ),
       body: Column(
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 8),
           // Tela do cinema
           Container(
             width: double.infinity,
@@ -200,7 +208,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
               ),
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 25),
           // Assentos
           Expanded(
             child: SingleChildScrollView(
@@ -220,71 +228,111 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                             margin: const EdgeInsets.symmetric(horizontal: 1),
                             child: Text(
                               '${index + 1}',
-                              style: const TextStyle(color: Colors.white70, fontSize: 12),
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  const SizedBox(height: 10),
-                  // Fileiras de assentos
-                  ...List.generate(seats.length, (row) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Letra da fileira
-                          SizedBox(
-                            width: 25,
-                            child: Text(
-                              rows[row],
-                              style: const TextStyle(color: Colors.white70, fontSize: 12),
-                              textAlign: TextAlign.center,
+                    const SizedBox(height: 10),
+                    // Fileiras de assentos
+                    ...List.generate(seats.length, (row) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Letra da fileira
+                            SizedBox(
+                              width: 25,
+                              child: Text(
+                                rows[row],
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                          ...List.generate(seatsPerRow, (col) {
-                            // Adiciona espaço para o corredor no meio
-                            if (col == seatsPerRow ~/ 2) {
-                              return const SizedBox(width: 15);
-                            }
-                            final status = seats[row][col];
-                            return _buildSeat(row, col, status);
-                          }),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
+                            ...List.generate(seatsPerRow, (col) {
+                              // Adiciona espaço para o corredor no meio
+                              if (col == seatsPerRow ~/ 2) {
+                                return const SizedBox(width: 15);
+                              }
+                              final status = seats[row][col];
+                              return _buildSeat(row, col, status);
+                            }),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
             ),
           ),
-          ),
           // Legenda
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.black26,
-              borderRadius: BorderRadius.circular(8),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), // Menor padding
+              margin: const EdgeInsets.symmetric(horizontal: 50), // Margem maior para diminuir o container
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Wrap(
+                spacing: 8, // Reduzido
+                runSpacing: 4, // Reduzido
+                alignment: WrapAlignment.center, // Centralizado
+                children: [
+                  _buildLegendItem(const Color(0xFF2196F3), "Disponível"),
+                  _buildLegendItem(const Color(0xFF4CAF50), "Selecionado"),
+                  _buildLegendItem(const Color(0xFF9E9E9E), "Reservado"),
+                  _buildLegendItem(const Color(0xFFE53935), "Bloqueado"),
+                ],
+              ),
             ),
-            child: Wrap(
-              spacing: 16,
-              runSpacing: 8,
-              alignment: WrapAlignment.spaceEvenly,
-              children: [
-                _buildLegendItem(const Color(0xFF2196F3), "Disponível"),
-                _buildLegendItem(const Color(0xFF4CAF50), "Selecionado"),
-                _buildLegendItem(const Color(0xFF9E9E9E), "Reservado"),
-                _buildLegendItem(const Color(0xFFE53935), "Bloqueado"),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
+          )
+,
         ],
       ),
+      bottomNavigationBar: selectedSeat.isNotEmpty
+      ?  Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        child: ElevatedButton(
+           style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+                                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+
+                minimumSize: const Size.fromHeight(50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => PaymentPage(
+                            seats: selectedSeat,
+                            movie: widget.movie,
+                            date: widget.selectedDate,
+                            session: widget.selectedSession,
+                            room: widget.selectedRoom,
+                          ),
+                    ),
+                  );
+                },
+                child: Text("Ingressos", style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+              ),
+      ): null,
     );
   }
 

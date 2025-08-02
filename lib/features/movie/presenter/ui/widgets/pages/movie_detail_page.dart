@@ -7,7 +7,10 @@ import 'package:ingressos/features/movie/domain/entities/review_entity.dart';
 import 'package:ingressos/features/movie/domain/entities/video_entity.dart';
 import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart';
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
+import 'package:ingressos/features/room/presenter/provider/room_notifier.dart';
 import 'package:ingressos/features/seat/presenter/ui/pages/seat_selection_page.dart';
+import 'package:ingressos/features/ticket/presenter/ui/ticket_selection_page.dart';
+import 'package:ingressos/injection_container/service_locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailPage extends StatefulWidget {
@@ -29,6 +32,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   late Future<List<Video>> _videosFuture;
   late Future<List<Cast>> _castFuture;
   late Future<List<Review>> _reviewsFuture;
+  late List<Room> _rooms;
+  final RoomNotifier _roomNotifier = get<RoomNotifier>();
 
   DateTime? selectedDate;
   String? selectedSession;
@@ -42,6 +47,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     _videosFuture = _fetchVideos();
     _castFuture = _fetchCast();
     _reviewsFuture = _fetchReviews();
+    _rooms = _fetchRooms();
   }
 
   Future<MovieDetail> _fetchMovieDetail() async {
@@ -54,7 +60,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Future<List<Video>> _fetchVideos() async {
     return await widget.notifier.getMovieVideos(widget.movie.id);
-    
   }
 
   Future<List<Cast>> _fetchCast() async {
@@ -65,10 +70,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return await widget.notifier.getMovieReviews(widget.movie.id);
   }
 
+  List<Room> _fetchRooms() {
+    return _roomNotifier.availableRooms;
+  }
+
   void _onDateSelected(DateTime date) {
     setState(() {
       selectedDate = date;
-      selectedSession = null; 
+      selectedSession = null;
     });
   }
 
@@ -87,31 +96,33 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   }
 
   void _buyTicket() {
-    if (selectedDate != null && selectedSession != null && selectedRoom != null) {
+    if (selectedDate != null &&
+        selectedSession != null &&
+        selectedRoom != null) {
       Navigator.push(
-        context, 
+        context,
         MaterialPageRoute(
-          builder: (context) => SeatSelectionPage(
-            movie: widget.movie,
-            selectedDate: selectedDate!,
-            selectedSession: selectedSession!,
-            selectedRoom: selectedRoom!,
-          ),
+          builder:
+              (context) => SeatSelectionPage(
+                movie: widget.movie,
+                selectedDate: selectedDate!,
+                selectedSession: selectedSession!,
+                selectedRoom: selectedRoom!,
+              ),
         ),
       );
     }
   }
 
-   void _launchURL(String trailerKey) async {
-  final Uri url = Uri.parse('https://www.youtube.com/watch?v=$trailerKey');
+  void _launchURL(String trailerKey) async {
+    final Uri url = Uri.parse('https://www.youtube.com/watch?v=$trailerKey');
 
-  try {
-  await launchUrl(url, mode: LaunchMode.externalApplication);
-} catch (e) {
-  throw Exception('Erro ao abrir o link: ${e.toString()}');
-}
-}
-
+    try {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      throw Exception('Erro ao abrir o link: ${e.toString()}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +136,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           padding: const EdgeInsets.all(12),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.amber,
               foregroundColor: Colors.black,
               minimumSize: const Size.fromHeight(50),
               shape: RoundedRectangleBorder(
@@ -133,10 +144,15 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
             ),
             onPressed:
-                (selectedDate != null && selectedSession != null)
+                (selectedDate != null &&
+                        selectedSession != null &&
+                        selectedRoom != null)
                     ? _buyTicket
                     : null,
-            child: const Text('Comprar ingresso'),
+            child: const Text(
+              'Comprar ingresso',
+              style: TextStyle(fontSize: 17),
+            ),
           ),
         ),
       ),
@@ -336,10 +352,29 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                   );
                                 }).toList(),
                           ),
+                          SizedBox(height: 16),
+                          Wrap(
+                            spacing: 8,
+                            children:
+                                _rooms.map((room) {
+                                  final isSelected = selectedRoom == room;
+                                  return ChoiceChip(
+                                    label: Text(room.name),
+                                    selected: isSelected,
+                                    onSelected: (_) => _onRoomSelected(room),
+                                    selectedColor: Colors.amber,
+                                    backgroundColor: Colors.grey[800],
+                                    labelStyle: TextStyle(
+                                      color:
+                                          isSelected
+                                              ? Colors.black
+                                              : Colors.white,
+                                    ),
+                                  );
+                                }).toList(),
+                          ),
                         ],
-
                         const SizedBox(height: 24),
-
                         // Elenco
                         Text(
                           'Elenco',
@@ -483,7 +518,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                             const SizedBox(height: 4),
                                             Text(
                                               review.content,
-                                              maxLines: 4,
+                                              maxLines: 6,
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 color: Colors.white70,

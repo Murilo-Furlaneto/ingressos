@@ -30,19 +30,16 @@ void setupLocator() {
   );
 
   get.registerLazySingleton<RoomDataSource>(() => RoomDataSource());
-
   get.registerLazySingleton(() => GetNowPlayingMovies(repository: get()));
   get.registerLazySingleton(() => GetUpComingMovies(repository: get()));
   get.registerLazySingleton(() => GetMovieCast(repository: get()));
   get.registerLazySingleton((() => GetMovieDetail(repository: get())));
   get.registerLazySingleton(() => GetMovieReviews(repository: get()));
   get.registerLazySingleton(() => GetMovieVideos(repository: get()));
-  get.registerLazySingleton<RoomDataSource>(() => RoomDataSource());
   get.registerLazySingleton<RoomRepositoryImpl>(() => RoomRepositoryImpl());
   get.registerLazySingleton<RoomRepository>(() => RoomRepositoryImpl());
   get.registerLazySingleton(() => GetAvailableRoomsUseCase(get()));
   get.registerFactory(() => RoomNotifier(get()));
-  get.registerLazySingleton<RoomDataSource>(() => RoomDataSource());
 
   get.registerFactory(
     () => MovieNotifier(

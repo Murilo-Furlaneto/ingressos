@@ -1,7 +1,6 @@
 enum TicketType {
   meiaEntrada("Meia Entrada"),
   inteira("Inteira"),
-  estudante("Estudante"),
   aposentado("Aposentado"),
   vip("VIP");
 

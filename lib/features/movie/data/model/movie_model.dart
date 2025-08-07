@@ -66,34 +66,34 @@ class MovieModel {
   static Movie toEntity(MovieModel model) {
     return Movie(
       id: model.id,
-      title: model.title,
+      titulo: model.title,
       posterPath: model.posterPath,
       backdropPath: model.backdropPath ?? '', 
-      genreIds: model.genreIds,
-      overview: model.overview,
-      releaseDate: model.releaseDate,
-      voteAverage: model.voteAverage,
-      voteCount: model.voteCount,
-      adult: model.adult,
-      originalLanguage: model.originalLanguage,
-      popularity: model.popularity,
+      generoIds: model.genreIds,
+      sinopse: model.overview,
+      dataLancamento: model.releaseDate,
+      notaMedia: model.voteAverage,
+      quantidadeVotos: model.voteCount,
+      adulto: model.adult,
+      idiomaOriginal: model.originalLanguage,
+      popularidade: model.popularity,
     );
   }
 
   static MovieModel toModel(Movie movie) {
     return MovieModel(
       id: movie.id,
-      title: movie.title,
+      title: movie.titulo,
       posterPath: movie.posterPath,
       backdropPath: movie.backdropPath, 
-      genreIds: movie.genreIds,
-      overview: movie.overview,
-      releaseDate: movie.releaseDate,
-      voteAverage: movie.voteAverage,
-      voteCount: movie.voteCount,
-      adult: movie.adult,
-      originalLanguage: movie.originalLanguage,
-      popularity: movie.popularity,
+      genreIds: movie.generoIds,
+      overview: movie.sinopse,
+      releaseDate: movie.dataLancamento,
+      voteAverage: movie.notaMedia,
+      voteCount: movie.quantidadeVotos,
+      adult: movie.adulto,
+      originalLanguage: movie.idiomaOriginal,
+      popularity: movie.popularidade,
     );
   }
 }

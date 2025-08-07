@@ -1,30 +1,31 @@
 import 'package:ingressos/features/room/data/model/room_model.dart';
+import 'package:ingressos/features/ticket/domain/entities/enum/enum_screening%20_type.dart';
 
 class RoomDataSource {
   static final List<RoomModel> availableRooms = [
     const RoomModel(
-      name: "SALA 01 - DUB",
-      type: "2D",
+      name: "SALA 01",
+      type: ScreeningType.doisD,
       capacity: 196,
     ),
     const RoomModel(
-      name: "SALA 02 - DUB",
-      type: "3D",
+      name: "SALA 02",
+      type: ScreeningType.tresD,
       capacity: 180,
     ),
     const RoomModel(
-      name: "SALA 03 - LEG",
-      type: "2D",
+      name: "SALA 03",
+      type: ScreeningType.doisD,
       capacity: 150,
     ),
     const RoomModel(
-      name: "SALA 04 - IMAX",
-      type: "IMAX",
+      name: "SALA 04",
+      type: ScreeningType.imax,
       capacity: 220,
     ),
     const RoomModel(
-      name: "SALA 05 - VIP",
-      type: "2D",
+      name: "SALA 05",
+      type: ScreeningType.doisD,
       capacity: 100,
     ),
   ];

@@ -5,6 +5,7 @@ import 'package:ingressos/features/payment/presenter/ui/payment_page.dart';
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
 import 'package:ingressos/features/seat/domain/entities/seat_entity.dart';
 import 'package:ingressos/features/seat/domain/enum/seat_status.dart';
+import 'package:ingressos/features/ticket/presenter/ui/ticket_selection_page.dart';
 
 class SeatSelectionPage extends StatefulWidget {
   const SeatSelectionPage({
@@ -148,19 +149,19 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                   ),
                   decoration: BoxDecoration(
                     color:
-                        widget.selectedRoom.type == "DUB"
+                        widget.selectedRoom.type.description == "DUB"
                             ? Colors.purple
-                            : widget.selectedRoom.type == "IMAX"
+                            : widget.selectedRoom.type.description == "IMAX"
                             ? Colors.blue
-                            : widget.selectedRoom.type == "3D"
+                            : widget.selectedRoom.type.description == "3D"
                             ? Colors.orange
-                            : widget.selectedRoom.type == "VIP"
+                            : widget.selectedRoom.type.description == "VIP"
                             ? Colors.amber
                             : Colors.teal,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    widget.selectedRoom.type,
+                    widget.selectedRoom.type.description,
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white,
@@ -320,7 +321,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (_) => PaymentPage(
+                          (_) => TicketSelectionPage(
                             seats: selectedSeat,
                             movie: widget.movie,
                             date: widget.selectedDate,

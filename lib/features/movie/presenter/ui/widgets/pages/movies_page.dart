@@ -48,9 +48,9 @@ class _MoviesPageState extends State<MoviesPage>
         return GestureDetector(
           onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetailPage(movie: movie, notifier: movieNotifier,))),
           child: MovieCard(
-            title: movie.title,
-            rating: movie.voteAverage,
-            genres: getGenreNames(movie.genreIds),
+            title: movie.titulo,
+            rating: movie.notaMedia,
+            genres: getGenreNames(movie.generoIds),
             backdropPath: movie.backdropPath,
           ),
         );

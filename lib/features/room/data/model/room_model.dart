@@ -1,23 +1,21 @@
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
+import 'package:ingressos/features/ticket/domain/entities/enum/enum_screening%20_type.dart';
 
 class RoomModel extends Room {
   const RoomModel({
-    required String name,
-    required String type,
-    required int capacity,
-  }) : super(
-          name: name,
-          type: type,
-          capacity: capacity,
-        );
+    required super.name,
+    required super.type,
+    required super.capacity,
+  });
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
     return RoomModel(
       name: json['name'] as String,
-      type: json['type'] as String,
+      type: json['type'] as ScreeningType,
       capacity: json['capacity'] as int,
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {

@@ -9,7 +9,6 @@ import 'package:ingressos/features/movie/presenter/provider/movie_notifier.dart'
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
 import 'package:ingressos/features/room/presenter/provider/room_notifier.dart';
 import 'package:ingressos/features/seat/presenter/ui/pages/seat_selection_page.dart';
-import 'package:ingressos/features/ticket/presenter/ui/ticket_selection_page.dart';
 import 'package:ingressos/injection_container/service_locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -202,7 +201,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.movie.title,
+                          widget.movie.titulo,
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -216,7 +215,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Duração: ${detail.runtime} min | Nota: ${widget.movie.voteAverage.toStringAsFixed(1)}',
+                          'Duração: ${detail.runtime} min | Nota: ${widget.movie.notaMedia.toStringAsFixed(1)}',
                           style: const TextStyle(color: Colors.white70),
                         ),
                         const SizedBox(height: 16),
@@ -228,7 +227,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          widget.movie.overview,
+                          widget.movie.sinopse,
                           style: const TextStyle(color: Colors.white70),
                         ),
                         const SizedBox(height: 20),

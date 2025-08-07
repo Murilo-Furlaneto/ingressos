@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
-import 'package:ingressos/features/payment/presenter/ui/payment_page.dart';
+import 'package:ingressos/features/payment/presenter/ui/summary_page.dart';
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
 import 'package:ingressos/features/seat/domain/entities/seat_entity.dart';
-import 'package:ingressos/features/seat/presenter/ui/pages/seat_selection_page.dart';
 import 'package:ingressos/features/ticket/data/datasource/ticket_price.dart';
+import 'package:ingressos/features/ticket/domain/entities/enum/enum_ticket_status.dart';
 import 'package:ingressos/features/ticket/domain/entities/enum_ticket_type.dart';
 import 'package:ingressos/features/ticket/domain/entities/ticket_entity.dart';
 
-
-
 class TicketSelectionPage extends StatefulWidget {
-
   const TicketSelectionPage({
+    super.key,
+    required this.seats,
     required this.movie,
     required this.date,
     required this.session,
     required this.room,
   });
 
-final Movie movie;
-final DateTime date;
-final String session;
-final Room room;
-
-
+  final List<Seat> seats;
+  final Movie movie;
+  final DateTime date;
+  final String session;
+  final Room room;
 
   @override
   _TicketSelectionPageState createState() => _TicketSelectionPageState();
@@ -35,14 +33,13 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
     for (var type in TicketType.values) type: 0,
   };
 
- final Map<TicketType,double> ticketPrices = prices;
+  final Map<TicketType, double> ticketPrices = prices;
 
   double get total => ticketCounts.entries
       .map((e) => ticketPrices[e.key]! * e.value)
       .fold(0.0, (a, b) => a + b);
 
-  bool get canContinue =>
-      ticketCounts.values.any((count) => count > 0); 
+  bool get canContinue => ticketCounts.values.any((count) => count > 0);
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +80,10 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                   shadowColor: Colors.black12,
                   elevation: 2,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 20,
+                    ),
                     child: Row(
                       children: [
                         Icon(
@@ -118,14 +118,19 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove_circle_outline, color: Colors.amber),
-                              onPressed: ticketCounts[type]! > 0
-                                  ? () {
-                                      setState(() {
-                                        ticketCounts[type] = ticketCounts[type]! - 1;
-                                      });
-                                    }
-                                  : null,
+                              icon: Icon(
+                                Icons.remove_circle_outline,
+                                color: Colors.amber,
+                              ),
+                              onPressed:
+                                  ticketCounts[type]! > 0
+                                      ? () {
+                                        setState(() {
+                                          ticketCounts[type] =
+                                              ticketCounts[type]! - 1;
+                                        });
+                                      }
+                                      : null,
                               splashRadius: 22,
                             ),
                             SizedBox(
@@ -142,7 +147,10 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(Icons.add_circle_outline, color: Colors.amber),
+                              icon: Icon(
+                                Icons.add_circle_outline,
+                                color: Colors.amber,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   ticketCounts[type] = ticketCounts[type]! + 1;
@@ -164,7 +172,9 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
             decoration: BoxDecoration(
               color: Colors.grey[900]!.withOpacity(0.9),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
             child: Row(
               children: [
@@ -172,27 +182,59 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                   child: Text(
                     "Total: R\$ ${total.toStringAsFixed(2)}",
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFBF00), // Amber, ótimo contraste
+                    backgroundColor: const Color(
+                      0xFFFFBF00,
+                    ), // Amber, ótimo contraste
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  onPressed: canContinue
-                      ? () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => 
-                           SeatSelectionPage(movie:widget.movie, selectedDate: widget.date, selectedSession: widget.session, selectedRoom: widget.room)));
-                        }
-                      : null,
+                  onPressed:
+                      canContinue
+                          ? () {
+                            final selectedTicketTypes =
+                                ticketCounts.keys
+                                    .where((key) => ticketCounts[key]! > 0)
+                                    .toList();
+
+                            final ticket = Ticket(
+                              filme: widget.movie,
+                              dataSessao: widget.date,
+                              horarioSessao: widget.date,
+                              sala: widget.room,
+                              tipoIngresso: selectedTicketTypes.first,
+                              valor: total,
+                              assento: widget.seats,
+                              nomeCliente: "",
+                              status: TicketStatus.ativo,
+                              dataHoraCompra: DateTime.now(),
+                              tipoSessao: widget.room.type,
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        PurchaseSummaryPage(ticket: ticket),
+                              ),
+                            );
+                          }
+                          : null,
                   child: const Text(
-                    "Pagamento",
+                    "Resumo",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),

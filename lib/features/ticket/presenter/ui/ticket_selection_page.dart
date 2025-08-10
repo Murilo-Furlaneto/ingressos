@@ -221,7 +221,7 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                               nomeCliente: "",
                               status: TicketStatus.ativo,
                               dataHoraCompra: DateTime.now(),
-                              tipoSessao: widget.room.type,
+                              tipoSessao: widget.room.tipo,
                             );
                             Navigator.push(
                               context,

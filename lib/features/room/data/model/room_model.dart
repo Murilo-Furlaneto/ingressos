@@ -3,41 +3,41 @@ import 'package:ingressos/features/ticket/domain/entities/enum/enum_screening%20
 
 class RoomModel extends Room {
   const RoomModel({
-    required super.name,
-    required super.type,
-    required super.capacity,
+    required super.nome,
+    required super.tipo,
+    required super.capacidade,
   });
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
     return RoomModel(
-      name: json['name'] as String,
-      type: json['type'] as ScreeningType,
-      capacity: json['capacity'] as int,
+      nome: json['nome'] as String,
+      tipo: json['tipo'] as ScreeningType,
+      capacidade: json['capacidade'] as int,
     );
   }
 
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'type': type,
-      'capacity': capacity,
+      'nome': nome,
+      'tipo': tipo,
+      'capacidade': capacidade,
     };
   }
 
   static Room toEntity(RoomModel model) {
     return Room(
-      name: model.name,
-      type: model.type,
-      capacity: model.capacity,
+      nome: model.nome,
+      tipo: model.tipo,
+      capacidade: model.capacidade,
     );
   }
 
   static RoomModel fromEntity(Room room) {
     return RoomModel(
-      name: room.name,
-      type: room.type,
-      capacity: room.capacity,
+      nome: room.nome,
+      tipo: room.tipo,
+      capacidade: room.capacidade,
     );
   }
 }

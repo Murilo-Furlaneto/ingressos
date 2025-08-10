@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ingressos/features/printing/ui/printing_ticket_page.dart';
 import 'package:ingressos/features/ticket/domain/entities/ticket_entity.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-class PaymentPage extends StatefulWidget {
-  const PaymentPage({
-    super.key,
-    required this.ticket,
-  });
 
+class PaymentPage extends StatefulWidget {
+  const PaymentPage({super.key, required this.ticket});
 
   final Ticket ticket;
 
@@ -20,15 +19,29 @@ class _PaymentPageState extends State<PaymentPage> {
   bool isProcessing = false;
 
   final String pixCode = dotenv.get("PIX_CODE");
+
+  String formatarData(DateTime data) {
+    return DateFormat("dd/MM/yyyy", "pt_BR").format(data);
+  }
+
+  String formatarHora(DateTime hora) {
+    return DateFormat("HH:mm", "pt_BR").format(hora);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final seatList =
-        widget.ticket.assento.map((e) => e.posicao).toList().join(", ");
+    final seatList = widget.ticket.assento
+        .map((e) => e.posicao)
+        .toList()
+        .join(", ");
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C2D),
       appBar: AppBar(
-        title: const Text("Pagamento via Pix", style: TextStyle(color: Colors.white),),
+        title: const Text(
+          "Pagamento via Pix",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 1,
       ),
@@ -48,26 +61,36 @@ class _PaymentPageState extends State<PaymentPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.ticket.filme.titulo,
-                        style: const TextStyle(
-                            color: Colors.amber,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18)),
+                    Text(
+                      widget.ticket.filme.titulo,
+                      style: const TextStyle(
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     Text(
-                      "Data: ${widget.ticket.dataSessao.day}/${widget.ticket.dataSessao.month}/${widget.ticket.dataSessao.year} às ${widget.ticket.horarioSessao}",
+                      "Data:${formatarData(widget.ticket.dataSessao)} às ${formatarHora(widget.ticket.horarioSessao)}",
+
                       style: const TextStyle(
-                          color: Colors.white70, fontSize: 15),
+                        color: Colors.white70,
+                        fontSize: 15,
+                      ),
                     ),
                     Text(
-                      "Sala: ${widget.ticket.sala.name}",
+                      "Sala: ${widget.ticket.sala.nome}",
                       style: const TextStyle(
-                          color: Colors.white70, fontSize: 15),
+                        color: Colors.white70,
+                        fontSize: 15,
+                      ),
                     ),
                     Text(
                       "Assentos: $seatList",
                       style: const TextStyle(
-                          color: Colors.white70, fontSize: 15),
+                        color: Colors.white70,
+                        fontSize: 15,
+                      ),
                     ),
                   ],
                 ),
@@ -78,7 +101,8 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
@@ -105,7 +129,10 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               const SizedBox(height: 18),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(8),
@@ -114,7 +141,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        pixCode.substring(0, 32) + "...", 
+                        pixCode.substring(0, 32) + "...",
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 11,
@@ -129,9 +156,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: pixCode));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Código Pix copiado!"),
-                          ),
+                          const SnackBar(content: Text("Código Pix copiado!")),
                         );
                       },
                     ),
@@ -150,34 +175,50 @@ class _PaymentPageState extends State<PaymentPage> {
                     foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
-                  icon: isProcessing
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                            strokeWidth: 3,
-                          ),
-                        )
-                      : const Icon(Icons.print_rounded, size: 24),
+                  icon:
+                      isProcessing
+                          ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.black,
+                              ),
+                              strokeWidth: 3,
+                            ),
+                          )
+                          : const Icon(Icons.print_rounded, size: 24),
                   label: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Text(
                       isProcessing ? "Processando..." : "Imprimir ingressos",
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  onPressed: isProcessing
-                      ? null
-                      : () async {
-                          setState(() => isProcessing = true);
-                          await Future.delayed(const Duration(seconds: 2));
-                          setState(() => isProcessing = false);
-                        
-                         //  Navigator.push(context, MaterialPageRoute(builder: (_) => PrintTicketPage()));
-                        },
+                  onPressed:
+                      isProcessing
+                          ? null
+                          : () async {
+                            setState(() => isProcessing = true);
+                            await Future.delayed(const Duration(seconds: 2));
+                            setState(() => isProcessing = false);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => PrintingTicketPage(
+                                      ticket: widget.ticket,
+                                    ),
+                              ),
+                            );
+                          },
                 ),
               ),
               const SizedBox(height: 10),

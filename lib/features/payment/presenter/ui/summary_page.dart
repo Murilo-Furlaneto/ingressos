@@ -103,7 +103,7 @@ class _PurchaseSummaryPageState extends State<PurchaseSummaryPage> {
                   Expanded(
                     child: InfoCard(
                       label: "Sala",
-                      value: widget.ticket.sala.name,
+                      value: widget.ticket.sala.nome,
                     ),
                   ),
                   const SizedBox(width: 8),

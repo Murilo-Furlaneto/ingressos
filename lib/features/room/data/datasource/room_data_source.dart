@@ -4,29 +4,29 @@ import 'package:ingressos/features/ticket/domain/entities/enum/enum_screening%20
 class RoomDataSource {
   static final List<RoomModel> availableRooms = [
     const RoomModel(
-      name: "SALA 01",
-      type: ScreeningType.doisD,
-      capacity: 196,
+      nome: "SALA 01",
+      tipo: ScreeningType.doisD,
+      capacidade: 196,
     ),
     const RoomModel(
-      name: "SALA 02",
-      type: ScreeningType.tresD,
-      capacity: 180,
+      nome: "SALA 02",
+      tipo: ScreeningType.tresD,
+      capacidade: 180,
     ),
     const RoomModel(
-      name: "SALA 03",
-      type: ScreeningType.doisD,
-      capacity: 150,
+      nome: "SALA 03",
+      tipo: ScreeningType.doisD,
+      capacidade: 150,
     ),
     const RoomModel(
-      name: "SALA 04",
-      type: ScreeningType.imax,
-      capacity: 220,
+      nome: "SALA 04",
+      tipo: ScreeningType.imax,
+      capacidade: 220,
     ),
     const RoomModel(
-      name: "SALA 05",
-      type: ScreeningType.doisD,
-      capacity: 100,
+      nome: "SALA 05",
+      tipo: ScreeningType.doisD,
+      capacidade: 100,
     ),
   ];
 }

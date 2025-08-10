@@ -358,7 +358,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 _rooms.map((room) {
                                   final isSelected = selectedRoom == room;
                                   return ChoiceChip(
-                                    label: Text(room.name),
+                                    label: Text(room.nome),
                                     selected: isSelected,
                                     onSelected: (_) => _onRoomSelected(room),
                                     selectedColor: Colors.amber,

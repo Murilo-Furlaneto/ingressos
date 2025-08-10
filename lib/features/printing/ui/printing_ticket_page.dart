@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
-import 'package:ingressos/features/room/domain/entities/room_entity.dart';
-import 'package:ingressos/features/seat/domain/entities/seat_entity.dart';
+import 'package:ingressos/features/printing/ui/widgets/printing_ticket.dart';
+import 'package:ingressos/features/ticket/domain/entities/ticket_entity.dart';
 
 class PrintingTicketPage extends StatelessWidget {
+  const PrintingTicketPage({super.key, required this.ticket});
 
-  const PrintingTicketPage({ super.key, required this.seats, required this.movie, required this.date, required this.session, required this.room });
+  final Ticket ticket;
 
-  final List<Seat> seats;
-  final Movie movie;
-  final DateTime date;
-  final String session;
-  final Room room;
-
-   @override
-   Widget build(BuildContext context) {
-       return Scaffold(
-           appBar: AppBar(title: const Text(''),),
-           body: ListView(
-            children: [],
-           ),
-       );
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: IconButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Impressão realizada com sucesso!'),
+              backgroundColor: Colors.green, // Para mostrar sucesso visualmente
+              duration: Duration(seconds: 3),
+            ),
+          );
+        },
+        icon: Icon(Icons.print),
+      ),
+      body: PrintingTicket(ticket: ticket).preview(),
+    );
   }
 }

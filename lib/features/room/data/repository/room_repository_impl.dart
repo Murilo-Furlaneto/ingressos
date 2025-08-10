@@ -9,9 +9,9 @@ class RoomRepositoryImpl implements RoomRepository {
   }
 
   @override
-  Room getRoomByName(String name) {
+  Room getRoomByName(String nome) {
     return RoomDataSource.availableRooms.firstWhere(
-      (room) => room.name == name,
+      (room) => room.nome == nome,
       orElse: () => throw Exception('Sala não encontrada'),
     );
   }

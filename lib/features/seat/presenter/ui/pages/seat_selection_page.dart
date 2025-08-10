@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ingressos/features/movie/domain/entities/movie_entity.dart';
-import 'package:ingressos/features/payment/presenter/ui/payment_page.dart';
 import 'package:ingressos/features/room/domain/entities/room_entity.dart';
 import 'package:ingressos/features/seat/domain/entities/seat_entity.dart';
 import 'package:ingressos/features/seat/domain/enum/seat_status.dart';
@@ -134,7 +133,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                 const Icon(Icons.location_on, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
-                  widget.selectedRoom.name,
+                  widget.selectedRoom.nome,
                   style: const TextStyle(
                     fontSize: 13,
                     color: Colors.grey,
@@ -149,19 +148,19 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                   ),
                   decoration: BoxDecoration(
                     color:
-                        widget.selectedRoom.type.description == "DUB"
+                        widget.selectedRoom.tipo.description == "DUB"
                             ? Colors.purple
-                            : widget.selectedRoom.type.description == "IMAX"
+                            : widget.selectedRoom.tipo.description == "IMAX"
                             ? Colors.blue
-                            : widget.selectedRoom.type.description == "3D"
+                            : widget.selectedRoom.tipo.description == "3D"
                             ? Colors.orange
-                            : widget.selectedRoom.type.description == "VIP"
+                            : widget.selectedRoom.tipo.description == "VIP"
                             ? Colors.amber
                             : Colors.teal,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    widget.selectedRoom.type.description,
+                    widget.selectedRoom.tipo.description,
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white,

@@ -3,10 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ingressos/injection_container/service_locator.dart';
 import 'package:ingressos/features/movie/presenter/ui/widgets/pages/movies_page.dart';
 import 'package:ingressos/routes/routes.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
+  await initializeDateFormatting('pt_BR', null);
   setupLocator();
   runApp(const MyApp());
 }
